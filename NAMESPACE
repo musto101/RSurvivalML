@@ -2,3 +2,4 @@
 
 export(dat_splitter)
 export(surv_imputation)
+export(surv_model)
