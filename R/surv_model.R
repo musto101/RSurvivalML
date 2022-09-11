@@ -22,7 +22,7 @@ surv_model <- function(exp_dat, modType, time, target, ids, grid) {
   train <- exp_dat[[1]]
   train[,target] <- as.integer(train[,target])
 
-  test <- exp_dat[[1]]
+  test <- exp_dat[[2]]
 
   test[,target] <- as.integer(test[,target])
 
@@ -35,12 +35,13 @@ surv_model <- function(exp_dat, modType, time, target, ids, grid) {
   # type that is compatible with package
 
   mlr_learners$get(modType)
+  lrn(modType)
 
   if (modType == 'surv.ranger') {
 
     learner <- lrn(modType, mtry = to_tune(grid$mtry),
         min.node.size = to_tune(grid$min.node.size),
-        importance = grid$importance)
+        num.trees = to_tune(grid$num.trees))
 
   } else if (modType == "surv.svm") {
 
@@ -81,7 +82,7 @@ measure <- msr("surv.cindex") # define the performance metric
 
 learner$train(train_mlr3)
 
-save(learner, file = paste0('model/', sub("\\.", "", modType), '.RData'))
+#save(learner, file = paste0('model/', sub("\\.", "", modType), '.RData'))
 
 train_score <- measure$score(learner$predict(train_mlr3))
 
