@@ -46,21 +46,25 @@ surv_model <- function(exp_dat, modType, time, target, ids, grid) {
   } else if (modType == "surv.svm") {
 
     learner <- lrn(modType, kernel = grid$kernel,
-                  gamma.mu = to_tune(grid$gamm.mu), maxiter	= grid$maxiter)
+                  maxiter	= to_tune(grid$maxiter),
+                  margin = to_tune(grid$margin),
+                  gamma.mu = to_tune(grid$gamma.mu))
 
 
   } else if (modType =='surv.deephit') {
 
-    learner <- lrn(modType, num_nodes = grid$num_nodes,
+    learner <- lrn(modType, num_nodes = to_tune(grid$num_nodes),
                    activation = to_tune(grid$activation),
-                   epochs	= grid$epochs, batch_size = grid$batch_size)
+                   epochs	= to_tune(grid$epochs),
+                   batch_size = to_tune(grid$batch_size))
 
   } else if (modType == 'surv.xgboost'){
 
-    learner <- lrn(modType, nrounds = grid$nrounds,
+    learner <- lrn(modType, nrounds = to_tune(grid$nrounds),
                    max_bin = to_tune(grid$max_bin),
-                   max_depth	= grid$max_depth,
-                   min_child_weight = grid$min_child_weight)
+                   max_depth	= to_tune(grid$max_depth),
+                   min_child_weight = to_tune(grid$min_child_weight),
+                   tree_method = 'hist', booster = 'dart')
 
 } else {
 
@@ -82,7 +86,7 @@ measure <- msr("surv.cindex") # define the performance metric
 
 learner$train(train_mlr3)
 
-#save(learner, file = paste0('model/', sub("\\.", "", modType), '.RData'))
+save(learner, file = paste0('modelling/', sub("\\.", "", modType), '.RData'))
 
 train_score <- measure$score(learner$predict(train_mlr3))
 
