@@ -7,6 +7,9 @@
 #' @param target is ...
 #'
 #' @return it returns a list containing two dataframes, one train, one test
+#' @import dplyr
+#' @import caret
+#' @import mlr3verse
 #' @export
 #'
 dat_splitter <- function(dat, perc, target) {
