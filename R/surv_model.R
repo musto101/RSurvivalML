@@ -33,6 +33,16 @@ surv_model <- function(exp_dat, modType, time, target, ids, grid) {
   test_mlr3 <- as_task_surv(na.omit(test), id = ids[2],
                             time = time, event = target) # change test to
   # type that is compatible with package
+  if (length(exp_dat) >2) {
+
+  ext <- exp_dat[[3]]
+
+  ext[,target] <- as.integer(ext[,target])
+
+  ext_mlr3 <- as_task_surv(na.omit(ext), id = ids[3],
+                             time = time, event = target)
+
+  }
 
   mlr_learners$get(modType)
   lrn(modType)
@@ -92,7 +102,9 @@ train_score <- measure$score(learner$predict(train_mlr3))
 
 test_score <- measure$score(learner$predict(test_mlr3))
 
-results <- list(train_score, test_score)
+ext_score <- measure$score(learner$predict(ext_mlr3))
+
+results <- list(train_score, test_score, ext_score)
 
 return(results)
 

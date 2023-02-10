@@ -14,6 +14,7 @@ dat_splitter <- function(dat, ext_dat = NULL, perc, target) {
   library(caret)
 
   dat[,target] <- as.factor(dat[,target])
+  ext_dat[,target] <- as.factor(ext_dat[,target])
 
   dat_split <- createDataPartition(y = dat[,target], p = perc, list = F)
 
