@@ -7,9 +7,9 @@
 surv_imputation(exp_dat, time_var, target_var)
 }
 \arguments{
-\item{exp_dat}{is a list of the train and test dataframes.}
+\item{exp_dat}{is a list of the train and test dataframes, an external dataset can also be included.}
 
-\item{time_var}{is the column in the df corresponding to time}
+\item{time_var}{is the column in the df corresponding to time.}
 
 \item{target_var}{is the column in the df corresponding to the target variable.}
 }
