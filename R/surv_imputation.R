@@ -44,6 +44,8 @@ surv_imputation <- function(exp_dat, time_var, target_var) {
 
   test_dat$X <- NULL
 
+  if(length(exp_dat) > 2) {
+
   ext_stime <- exp_dat[[3]] %>%
     select(all_of(target_var), all_of(time_var))
 
@@ -60,6 +62,11 @@ surv_imputation <- function(exp_dat, time_var, target_var) {
   dat_ext <- cbind(dat_ext, ext_stime)
 
   imput_dat <- list(dat_train, test_dat, dat_ext)
+
+  } else {
+
+    imput_dat <- list(dat_train, test_dat)
+  }
 
   return(imput_dat)
 }
