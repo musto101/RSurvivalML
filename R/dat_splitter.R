@@ -2,17 +2,14 @@
 #'
 #' This function ...
 #'
-#' @param dat is ...
-#' @param perc is ...
-#' @param target is ...
-#'
-#' @return it returns a list containing two dataframes, one train, one test
-#' @import dplyr
-#' @import caret
-#' @import mlr3verse
+#' @param dat is the full dataset which will be split intp train/test.
+#' @param ext_date is external data to be used for generalisation error estimates. Default is NULL for no external data.
+#' @param perc is the percentage of the full dataset to be used for train.
+#' @param target is the outcome value to be used in data partitioning.
+#' @return it returns a list containing two dataframes, one train, one test.
 #' @export
 #'
-dat_splitter <- function(dat, perc, target) {
+dat_splitter <- function(dat, ext_dat = NULL, perc, target) {
 
   library(caret)
 
@@ -23,7 +20,7 @@ dat_splitter <- function(dat, perc, target) {
   training <- dat[dat_split,]
   test <- dat[-dat_split,]
 
-  exp_dat <- list(training, test)
+  exp_dat <- list(training, test, ext_dat)
 
   return(exp_dat)
 

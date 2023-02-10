@@ -4,17 +4,19 @@
 \alias{dat_splitter}
 \title{Reading in dataframe and returning a list containing train and test dfs}
 \usage{
-dat_splitter(dat, perc, target)
+dat_splitter(dat, ext_dat = NULL, perc, target)
 }
 \arguments{
-\item{dat}{is ...}
+\item{dat}{is the full dataset which will be split intp train/test.}
 
-\item{perc}{is ...}
+\item{perc}{is the percentage of the full dataset to be used for train.}
 
-\item{target}{is ...}
+\item{target}{is the outcome value to be used in data partitioning.}
+
+\item{ext_date}{is external data to be used for generalisation error estimates. Default is NULL for no external data.}
 }
 \value{
-it returns a list containing two dataframes, one train, one test
+it returns a list containing two dataframes, one train, one test.
 }
 \description{
 This function ...
