@@ -7,8 +7,7 @@ Authors@R: person("Henry", "Musto", email = "musto101@googlemail.com",
 Description: TBC
 Imports: 
     dplyr,
-    caret,
-    mlr3verse,
+    caret
 Encoding: UTF-8
 RoxygenNote: 7.2.2
 License: MIT

@@ -9,15 +9,17 @@
 #' @return It returns a list containing train and test.
 #' @export
 #'
-surv_imputation <- function(exp_dat, time_var, target_var) {
+surv_imputation <- function(exp_dat, time_var= 'last_visit',
+                            target_var = 'last_DX') {
 
   library(tidyverse)
   library(caret)
 
-  train_stime <- exp_dat[[1]] %>%
+  training <- as.data.frame(exp_dat[[1]])
+  train_stime <- training %>%
     select(all_of(target_var), all_of(time_var))
 
-  train_wo_time <- exp_dat[[1]] %>%
+  train_wo_time <- training %>%
     select(-all_of(target_var), -all_of(time_var))
 
   train_na <- preProcess(as.data.frame(train_wo_time[, -1]),
@@ -28,14 +30,15 @@ surv_imputation <- function(exp_dat, time_var, target_var) {
 
   dat_train$X <- NULL
 
-  test_stime <- exp_dat[[2]] %>%
+
+  testing <- as.data.frame(exp_dat[[2]])
+  test_stime <- testing %>%
     select(all_of(target_var), all_of(time_var))
 
-  test_wo_time <- exp_dat[[2]] %>%
+  test_wo_time <- testing %>%
     select(-all_of(target_var), -all_of(time_var))
 
-  test_na <- preProcess(as.data.frame(rbind(train_wo_time[, -1],
-                                             test_wo_time[, -1]),
+  test_na <- preProcess(as.data.frame(test_wo_time[, -1],
                                        method = "knnImpute"))
 
   test_dat <- predict(test_na, test_wo_time)
@@ -44,12 +47,13 @@ surv_imputation <- function(exp_dat, time_var, target_var) {
 
   test_dat$X <- NULL
 
-  if(length(exp_dat) > 2) {
+  if(!is.null(exp_dat[[3]])) {
 
-  ext_stime <- exp_dat[[3]] %>%
+    ext_dat <- as.data.frame(exp_dat[[3]])
+    ext_stime <-  ext_dat %>%
     select(all_of(target_var), all_of(time_var))
 
-  ext_wo_time <- exp_dat[[3]] %>%
+  ext_wo_time <- ext_dat %>%
     select(-all_of(target_var), -all_of(time_var))
 
   ext_wo_time$X.1 <- NULL
@@ -65,7 +69,7 @@ surv_imputation <- function(exp_dat, time_var, target_var) {
 
   } else {
 
-    imput_dat <- list(dat_train, test_dat)
+    imput_dat <- list(dat_train, test_dat, ext_dat = NULL)
   }
 
   return(imput_dat)

@@ -4,7 +4,7 @@
 \alias{surv_imputation}
 \title{preprocessing test and train for KNN imputation}
 \usage{
-surv_imputation(exp_dat, time_var, target_var)
+surv_imputation(exp_dat, time_var = "last_visit", target_var = "last_DX")
 }
 \arguments{
 \item{exp_dat}{is a list of the train and test dataframes, an external dataset can also be included.}

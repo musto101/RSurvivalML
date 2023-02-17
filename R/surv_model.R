@@ -19,10 +19,10 @@ surv_model <- function(exp_dat, modType, time, target, ids, grid) {
   library(mlr3tuning)
   library(mlr3proba)
 
-  train <- exp_dat[[1]]
+  train <- as.data.frame(exp_dat[[1]])
   train[,target] <- as.integer(train[,target])
 
-  test <- exp_dat[[2]]
+  test <- as.data.frame(exp_dat[[2]])
 
   test[,target] <- as.integer(test[,target])
 
@@ -33,9 +33,9 @@ surv_model <- function(exp_dat, modType, time, target, ids, grid) {
   test_mlr3 <- as_task_surv(na.omit(test), id = ids[2],
                             time = time, event = target) # change test to
   # type that is compatible with package
-  if (length(exp_dat) >2) {
+  if (!is.null(exp_dat[[3]])) {
 
-  ext <- exp_dat[[3]]
+  ext <- as.data.frame(exp_dat[[3]])
 
   ext[,target] <- as.integer(ext[,target])
 
@@ -74,6 +74,7 @@ surv_model <- function(exp_dat, modType, time, target, ids, grid) {
                    max_bin = to_tune(grid$max_bin),
                    max_depth	= to_tune(grid$max_depth),
                    min_child_weight = to_tune(grid$min_child_weight),
+                   eta = to_tune(grid$eta),
                    tree_method = 'hist', booster = 'dart')
 
 } else {
@@ -102,9 +103,16 @@ train_score <- measure$score(learner$predict(train_mlr3))
 
 test_score <- measure$score(learner$predict(test_mlr3))
 
-ext_score <- measure$score(learner$predict(ext_mlr3))
+if (!is.null(exp_dat[[3]])) {
 
-results <- list(train_score, test_score, ext_score)
+  ext_score <- measure$score(learner$predict(ext_mlr3))
+  results <- list(train_score, test_score, ext_score)
+
+} else {
+
+  results <- list(train_score, test_score)
+
+}
 
 return(results)
 
